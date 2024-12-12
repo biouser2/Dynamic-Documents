@@ -1,0 +1,8 @@
+"0","Fig2 <-ggplot(case0201, aes(x = Depth)) +"
+"0","  geom_histogram(binwidth = 0.5, color = ""black"", fill = ""gray"", alpha = 0.7) +"
+"0","  facet_wrap(~ Year) +"
+"0","  labs(x = ""Beak Depth"", "
+"0","       y = ""Frequency"", "
+"0","       title = ""Histogram of Beak Depth for 1976 and 1978"") +"
+"0","  theme_bw()"
+"0","Fig2"

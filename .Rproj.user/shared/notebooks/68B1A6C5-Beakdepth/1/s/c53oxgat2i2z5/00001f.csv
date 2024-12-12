@@ -1,0 +1,3 @@
+"0",""
+"0","# Q-Q plot with line"
+"0","qqnorm(residuals(model), main = ""Q-Q Plot of Residuals"")"

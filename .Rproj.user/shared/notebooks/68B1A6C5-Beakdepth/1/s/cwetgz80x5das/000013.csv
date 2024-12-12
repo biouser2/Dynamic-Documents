@@ -1,0 +1,4 @@
+"0","case0201A <- case0201 %>%"
+"0","  group_by(Depth_squared) %>%"
+"0","  mutate(Depth_squared_Count = n())"
+"0","head(case0201A)"

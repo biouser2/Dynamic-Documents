@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.553">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Beak Depth Changes in the Medium Ground Finch</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Beakdepth_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Beakdepth_files/libs/quarto-html/quarto.js"></script>
+<script src="Beakdepth_files/libs/quarto-html/popper.min.js"></script>
+<script src="Beakdepth_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Beakdepth_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Beakdepth_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Beakdepth_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Beakdepth_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Beakdepth_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Beakdepth_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="Beakdepth_files/libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="Beakdepth_files/libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Beak Depth Changes in the Medium Ground Finch</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Loading libraries:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(SemiPar)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Sleuth3)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Beak morphology in many birds is thought to be under strong selective pressure relating to the acquisition and consumption of food (Grant &amp; Grant, 1989). A severe drought on the Galapagos island Daphne Major changed the food availability for the medium ground finch, <em>Geospiza fortis.</em> The seeds which this species usually consumes became scarce, and the main food source shifted to larger and tougher seeds. Mortality was high during this period, and it was observed that most surviving individuals had larger beaks that enabled them to consume these larger seeds (Grant &amp; Grant, 2006). Data on beak depth was collected before the drought in 1976 and after in 1978 for 89 individuals of the medium ground finch. Investigating whether the drought caused a shift in the mean beak depth of this population can elucidate the action and direction of natural selection, and help researchers understand how rapid character displacement can occur in a natural population. This analysis aims to test whether there was a significant shift in the beak depth of this population, which would be consistent with natural selection of beak depth in response to drought, by performing a linear regression analysis.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/clipboard-3062505746.png" class="img-fluid figure-img" width="230"></p>
+<figcaption>Figure 1<em>. Geospiza fortis</em>, Image credit: eBird</figcaption>
+</figure>
+</div>
+</section>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>This analysis uses “case0201” contained in the Sleuth3 data frame. The dataset contains 178 rows denoting the individuals from which measurements were taken across the study period, as well as 2 columns representing beak depth and year.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(case0201)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  Year Depth
+1 1976   6.2
+2 1976   6.8
+3 1976   7.1
+4 1976   7.1
+5 1976   7.4
+6 1976   7.8</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(case0201)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>'data.frame':   178 obs. of  2 variables:
+ $ Year : int  1976 1976 1976 1976 1976 1976 1976 1976 1976 1976 ...
+ $ Depth: num  6.2 6.8 7.1 7.1 7.4 7.8 7.9 8 8.2 8.4 ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(case0201)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Year          Depth       
+ Min.   :1976   Min.   : 6.200  
+ 1st Qu.:1976   1st Qu.: 9.100  
+ Median :1977   Median : 9.900  
+ Mean   :1977   Mean   : 9.804  
+ 3rd Qu.:1978   3rd Qu.:10.500  
+ Max.   :1978   Max.   :11.700  </code></pre>
+</div>
+</div>
+<p>To investigate whether there was a significant change in the mean beak depth of the medium ground finch population after the drought, this analysis performs a linear regression. This is a statistical method to model the relationship between a response variable and one or more predictors. The assumptions of linear regression include linearity of the relationship, independence of errors, homoscedasticity denoting constancy of variance of the residuals, and the normality of residuals.</p>
+<p>By constructing various linear models with different response variables -Depth, log Depth, square root of Depth, squared Depth- and testing whether the residual distribution meets the assumptions of constant variance and normality required for linear regression, the present analysis landed on using “squared beak depth” as the response variable in the model.</p>
+<p>The dataset was examined and transformations were made, after which residual diagnostics were used to test whether the different models met the assumptions of linear regression.</p>
+<section id="data-transformation" class="level4">
+<h4 class="anchored" data-anchor-id="data-transformation">Data Transformation</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Adding transformed variables as columns in the dataset</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>case0201<span class="sc">$</span>log_Depth <span class="ot">&lt;-</span> <span class="fu">log</span>(case0201<span class="sc">$</span>Depth)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>case0201<span class="sc">$</span>sqrt_Depth <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(case0201<span class="sc">$</span>Depth)</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>case0201<span class="sc">$</span>Depth_squared <span class="ot">&lt;-</span> case0201<span class="sc">$</span>Depth<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The residuals from log_Depth do not meet the assumption of normality in linear regression (p&lt;0.05), as demonstrated by the Shapiro-Wilk test. Model2 is inadequate for further analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model using log(Depth) </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(log_Depth <span class="sc">~</span> Year, <span class="at">data =</span> case0201)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log_Depth ~ Year, data = case0201)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.41721 -0.05036  0.02002  0.07078  0.21783 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -67.281612  15.566192  -4.322 2.58e-05 ***
+Year          0.035184   0.007874   4.469 1.41e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.105 on 176 degrees of freedom
+Multiple R-squared:  0.1019,    Adjusted R-squared:  0.09679 
+F-statistic: 19.97 on 1 and 176 DF,  p-value: 1.406e-05</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing normality of residuals</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>residuals2 <span class="ot">&lt;-</span> <span class="fu">resid</span>(model2)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>shapiro_test2 <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(residuals2)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>shapiro_test2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals2
+W = 0.93994, p-value = 8.591e-07</code></pre>
+</div>
+</div>
+<p>The residuals of sqrt_Depth do not meet the assumption of normality in linear regression (p&lt;0.05), as demonstrated by the Shapiro-Wilk test. Model3 is inadequate for further analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model using sqrt(Depth) </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>model3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(sqrt_Depth <span class="sc">~</span> Year, <span class="at">data =</span> case0201)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = sqrt_Depth ~ Year, data = case0201)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.58252 -0.08239  0.02859  0.10554  0.34802 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -103.89877   23.62042  -4.399 1.88e-05 ***
+Year           0.05414    0.01195   4.531 1.08e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1594 on 176 degrees of freedom
+Multiple R-squared:  0.1045,    Adjusted R-squared:  0.09938 
+F-statistic: 20.53 on 1 and 176 DF,  p-value: 1.08e-05</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing normality of residuals</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>residuals3 <span class="ot">&lt;-</span> <span class="fu">resid</span>(model3)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>shapiro_test3 <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(residuals3)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>shapiro_test3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals3
+W = 0.95663, p-value = 2.681e-05</code></pre>
+</div>
+</div>
+<p>The residuals of Depth do not meet the assumption of normality in linear regression (p&lt;0.05), as demonstrated by the Shapiro-Wilk test. Model4 is inadequate for further analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Linear model using Depth</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>model4 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Depth <span class="sc">~</span> Year, <span class="at">data =</span> case0201)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Depth ~ Year, data = case0201)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.2697 -0.5382  0.1618  0.6303  2.2303 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -651.04719  144.18752  -4.515 1.15e-05 ***
+Year           0.33427    0.07293   4.583 8.65e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.973 on 176 degrees of freedom
+Multiple R-squared:  0.1066,    Adjusted R-squared:  0.1016 
+F-statistic: 21.01 on 1 and 176 DF,  p-value: 8.65e-06</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing normality of residuals</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>residuals4 <span class="ot">&lt;-</span> <span class="fu">resid</span>(model4)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>shapiro_test4 <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(residuals4)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>shapiro_test4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals4
+W = 0.97012, p-value = 0.0007184</code></pre>
+</div>
+</div>
+</section>
+<section id="linear-model" class="level4">
+<h4 class="anchored" data-anchor-id="linear-model">Linear Model</h4>
+<p>Owing to the normality and constant variance of the residuals, the following model was chosen for the present analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Depth_squared <span class="sc">~</span> Year, <span class="at">data =</span> case0201)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>Table 1 summarizes the key properties of the dataset, including minimum and maximum values for beak depth in the population for before and after the flood, as well as the respective mean values. There is an increase in the mean beak depth of the population after the drought in 1977.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Summary table creation</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> case0201 <span class="sc">%&gt;%</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Minimum Beak Depth (mm)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">min</span>(Depth),</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Maximum Beak Depth (mm)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">max</span>(Depth),</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Mean Beak Depth (1976, mm)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(Depth[Year <span class="sc">==</span> <span class="dv">1976</span>]),</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Mean Beak Depth (1978, mm)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(Depth[Year <span class="sc">==</span> <span class="dv">1978</span>]),</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Mean Beak Depth Squared (1976, mm²)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(Depth_squared[Year <span class="sc">==</span> <span class="dv">1976</span>]),</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Mean Beak Depth Squared (1978, mm²)</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">mean</span>(Depth_squared[Year <span class="sc">==</span> <span class="dv">1978</span>])</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">t</span>() <span class="sc">%&gt;%</span>  <span class="co"># Transposes the table so that metrics are rows</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.data.frame</span>()</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Converting the row names of the summary_table dataframe into a new column named "Metric"</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>summary_table <span class="ot">&lt;-</span> tibble<span class="sc">::</span><span class="fu">rownames_to_column</span>(summary_table, <span class="st">"Metric"</span>)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(summary_table) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Metric"</span>, <span class="st">"Value"</span>)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating the summary table</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>summary_table <span class="sc">%&gt;%</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kbl</span>(<span class="at">caption =</span> <span class="st">"Table 1: Key Features of Finch Beak Depth Data"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">"striped"</span>, <span class="st">"hover"</span>, <span class="st">"condensed"</span>), <span class="at">full_width =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<table class="table table-striped table-hover table-condensed table-sm small" data-quarto-postprocess="true">
+<caption>Table 1: Key Features of Finch Beak Depth Data</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;" data-quarto-table-cell-role="th">Metric</th>
+<th style="text-align: right;" data-quarto-table-cell-role="th">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Minimum Beak Depth (mm)</td>
+<td style="text-align: right;">6.200000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Maximum Beak Depth (mm)</td>
+<td style="text-align: right;">11.700000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mean Beak Depth (1976, mm)</td>
+<td style="text-align: right;">9.469663</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mean Beak Depth (1978, mm)</td>
+<td style="text-align: right;">10.138202</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mean Beak Depth Squared (1976, mm²)</td>
+<td style="text-align: right;">90.734382</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mean Beak Depth Squared (1978, mm²)</td>
+<td style="text-align: right;">103.595618</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+</div>
+</div>
+<section id="descriptive-statistics" class="level4">
+<h4 class="anchored" data-anchor-id="descriptive-statistics">Descriptive Statistics</h4>
+<p>Examining the distribution of beak depth in the population before and after the flood as well as the mean values for each year is possible using a histogram and box plot. Figures 1 and 2 highlight the upwards shift in beak depth in the population from 1976 to 1978.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>Fig1 <span class="ot">&lt;-</span> case0201 <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(Year), <span class="at">y =</span> Depth)) <span class="sc">+</span> </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_jitter</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">as.factor</span>(Year), <span class="at">y =</span> Depth), <span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>, <span class="at">color =</span> <span class="st">"turquoise"</span>) <span class="sc">+</span> <span class="co"># Add jittered points</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Depth (mm)"</span>, <span class="at">title =</span> <span class="st">"Beak Depth in 1976 and 1978"</span>) <span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>Fig1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Beakdepth_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Fig2 <span class="ot">&lt;-</span><span class="fu">ggplot</span>(case0201, <span class="fu">aes</span>(<span class="at">x =</span> Depth)) <span class="sc">+</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="fl">0.5</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"gray"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> Year) <span class="sc">+</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Beak Depth"</span>, </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Frequency"</span>, </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Histogram of Beak Depth for 1976 and 1978"</span>) <span class="sc">+</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>Fig2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Beakdepth_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="linear-regression" class="level4">
+<h4 class="anchored" data-anchor-id="linear-regression">Linear Regression</h4>
+<p>The linear regression used squared beak depth as the response variable, which is shown to be the appropriate data transformation due to the normality of residuals. This is proven by the p-value of the Shapiro-Wilk test, which is greater than 0.05, suggesting the homoscedasticity of residuals in the model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Testing normality of residuals</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>residuals <span class="ot">&lt;-</span> <span class="fu">resid</span>(model)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>shapiro_test <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(residuals)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>shapiro_test</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  residuals
+W = 0.98721, p-value = 0.1063</code></pre>
+</div>
+</div>
+<p>Despite the Shapiro-Wilk test result, it is important to visually inspect the distribution of residuals by running residual diagnostics.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting up a 2x2 grid for the figure</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Histogram of residuals</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="st">"Histogram of Residuals"</span>, <span class="at">xlab =</span> <span class="st">"Residuals"</span>)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Q-Q plot with line</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(<span class="fu">residuals</span>(model), <span class="at">main =</span> <span class="st">"Q-Q Plot of Residuals"</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(<span class="fu">residuals</span>(model), <span class="at">col =</span> <span class="st">"red"</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Residuals vs. fitted values</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">fitted</span>(model), <span class="fu">residuals</span>(model),</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"Residuals vs Fitted Values"</span>,</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"Fitted Values"</span>,</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"Residuals"</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>)</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Scale-Location plot</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">3</span>, <span class="at">main =</span> <span class="st">"Scale-Location Plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Beakdepth_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The distribution of the residuals shown in the histogram is slightly left-skewed, suggesting a slight deviation from normality. Despite points on the Q-Q plot largely falling on the diagonal, there are deviations at the extremes. The straight line on the “Residuals vs Fitted Values” plot indicates the homoscedasticity of the residuals, and the same goes for the “Scale-Location Plot”. Taken together, the residual diagnostics confirm the overall normality of residuals from the linear model used in the analysis, despite slight deviations for extreme values.</p>
+</section>
+<section id="model-fit" class="level4">
+<h4 class="anchored" data-anchor-id="model-fit">Model Fit</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Depth_squared ~ Year, data = case0201)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-53.186 -11.436   2.494  11.276  46.156 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -12616.167   2728.856  -4.623 7.29e-06 ***
+Year             6.431      1.380   4.659 6.25e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 18.42 on 176 degrees of freedom
+Multiple R-squared:  0.1098,    Adjusted R-squared:  0.1047 
+F-statistic:  21.7 on 1 and 176 DF,  p-value: 6.251e-06</code></pre>
+</div>
+</div>
+<p>The linear regression returned a highly significant p-value at the 0.001 level, demonstrating the significant change in mean beak depth of the medium ground finch population. The slope indicates that squared beak depth increases by approximately 6.431 units for each additional year, and the p-value for this implies a strong linear relationship between year and squared beak depth. Thus, year can be said to be a statistically significant predictor of beak depth in this analysis. Additionally, the significance of the F-statistic confirms the significance of the linear model used in this analysis.</p>
+<p>However, the R-squared value of around 11% is relatively low. Only 11% of variability in squared beak depth is explained by year, suggesting the contribution of other factors which are not captured in the model. It is important to note that the present analysis uses year as a proxy for before and after the flood, but using environmental factors directly in the model may improve performance. Other factors that could have contributed to the observed trend, such as genetic variation and occurrence of hybridization with other species.</p>
+</section>
+</section>
+<section id="conclusions" class="level2">
+<h2 class="anchored" data-anchor-id="conclusions">Conclusions</h2>
+<p>This present analysis aimed to test whether there is evidence for the natural selection of beak depth in response to drought in a population of medium ground finches on the island Daphne Major. A linear regression was performed which included squared beak depth as the response variable, due to the distribution of its residuals meeting the assumptions of this statistical method. A highly statistically significant slope (&lt;0.001) demonstrates that there is a strong linear relationship between squared beak depth and year for this dataset, and the significance of the model overall is proven by the F-statistic. From these results, it can be said that year has a significant effect on the beak depth of this population.</p>
+<p>However, the R-squared value of only 11% suggests that year explains only a minor amount of variation seen in squared beak depth, and additional factors not included in this analysis likely play a role. It is important to consider that this analysis used year as a proxy for the drought which occurred on the island in 1977. Thus, including environmental factors such as rainfall or seed availability in the model directly rather than proxies such as year may improve the model performance. Another factor to consider is genetic variation. It is known that finches on the Galapagos islands can often hybridize, and the occurrence of such events may increase the genetic variation of a species, enabling it to respond more quickly to sudden environmental changes (Grant &amp; Grant, 1996). Hybridization might be an important predictor of the propensity for beak depth to respond and change by providing the necessary alleles and genetic variation for natural selection to rapidly act upon, leading to character displacement. Although difficult to capture, including allelic diversity and the propensity to produce hybrids into the model could significantly improve its performance.</p>
+<p>Taken together, the results of this analysis suggest that while year is an important predictor of beak depth increase in this population, other factors not captured in the model likely also play a role. Omitting the use of proxies such as year and including environmental factors directly in the model, as well as accounting for the effects of genetic variation and the propensity to hybridize may significantly improve model performance and explain more of the variation in beak depth seen in this population.</p>
+</section>
+<section id="references" class="level2">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<p>Grant, B.R. and Grant, P.R. (1989) ‘Natural selection in a population of Darwin’s finches’,&nbsp;<em>The American Naturalist</em>, 133(3), pp.&nbsp;377–393. doi:10.1086/284924.&nbsp;</p>
+<p>Grant, B.R. and Grant, P.R. (1996) ‘High survival of Darwin’s finch hybrids: Effects of beak morphology and diets’,&nbsp;<em>Ecology</em>, 77(2), pp.&nbsp;500–509. doi:10.2307/2265625.&nbsp;</p>
+<p>Grant, B.R. and Grant, P.R. (2003) ‘What Darwin’s finches can teach us about the evolutionary origin and regulation of Biodiversity’,&nbsp;<em>BioScience</em>, 53(10), p.&nbsp;965. doi:10.1641/0006-3568(2003)053[0965:wdfctu]2.0.co;2.&nbsp;</p>
+<p>Grant, P.R. and Grant, B.R. (2006) ‘Evolution of character displacement in Darwin’s finches’,&nbsp;<em>Science</em>, 313(5784), pp.&nbsp;224–226. doi:10.1126/science.1128374.&nbsp;</p>
+<p>Grant, P.R.&nbsp;<em>et al.</em>&nbsp;(1976) ‘Darwin’s finches: Population variation and natural selection.’,&nbsp;<em>Proceedings of the National Academy of Sciences</em>, 73(1), pp.&nbsp;257–261. doi:10.1073/pnas.73.1.257.&nbsp;</p>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

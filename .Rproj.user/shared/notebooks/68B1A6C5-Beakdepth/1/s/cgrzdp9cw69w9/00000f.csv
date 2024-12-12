@@ -1,0 +1,6 @@
+"0","case0201$log_Depth <- log(case0201$Depth)"
+"0",""
+"0","case0201$sqrt_Depth <- sqrt(case0201$Depth)"
+"0",""
+"0","case0201$Depth_squared <- case0201$Depth^2"
+"0",""

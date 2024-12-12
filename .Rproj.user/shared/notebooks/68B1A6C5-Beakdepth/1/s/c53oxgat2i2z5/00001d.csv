@@ -1,0 +1,5 @@
+"0","# Set up a 2x2 grid for the multipanel figure"
+"0","par(mfrow = c(2, 2))"
+"0",""
+"0","# Histogram of residuals"
+"0","hist(residuals(model), main = ""Histogram of Residuals"", xlab = ""Residuals"")"

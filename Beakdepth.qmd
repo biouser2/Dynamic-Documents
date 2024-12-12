@@ -1,0 +1,221 @@
+---
+title: "Beak Depth Changes in the Medium Ground Finch"
+format: html
+editor: visual
+---
+
+Loading libraries:
+
+```{r, message=FALSE}
+library(ggplot2)
+library(SemiPar)
+library(tidyr)
+library(tidyverse)
+library(Sleuth3)
+library(knitr)
+library(kableExtra)
+library(dplyr)
+```
+
+## Introduction
+
+Beak morphology in many birds is thought to be under strong selective pressure relating to the acquisition and consumption of food (Grant & Grant, 1989). A severe drought on the Galapagos island Daphne Major changed the food availability for the medium ground finch, *Geospiza fortis.* The seeds which this species usually consumes became scarce, and the main food source shifted to larger and tougher seeds. Mortality was high during this period, and it was observed that most surviving individuals had larger beaks that enabled them to consume these larger seeds (Grant & Grant, 2006). Data on beak depth was collected before the drought in 1976 and after in 1978 for 89 individuals of the medium ground finch. Investigating whether the drought caused a shift in the mean beak depth of this population can elucidate the action and direction of natural selection, and help researchers understand how rapid character displacement can occur in a natural population. This analysis aims to test whether there was a significant shift in the beak depth of this population, which would be consistent with natural selection of beak depth in response to drought, by performing a linear regression analysis.
+
+![Figure 1*. Geospiza fortis*, Image credit: eBird](images/clipboard-3062505746.png){fig-align="center" width="230"}
+
+## Methods
+
+This analysis uses "case0201" contained in the Sleuth3 data frame. The dataset contains 178 rows denoting the individuals from which measurements were taken across the study period, as well as 2 columns representing beak depth and year.
+
+```{r}
+head(case0201)
+str(case0201)
+summary(case0201)
+```
+
+To investigate whether there was a significant change in the mean beak depth of the medium ground finch population after the drought, this analysis performs a linear regression. This is a statistical method to model the relationship between a response variable and one or more predictors. The assumptions of linear regression include linearity of the relationship, independence of errors, homoscedasticity denoting constancy of variance of the residuals, and the normality of residuals.
+
+By constructing various linear models with different response variables -Depth, log Depth, square root of Depth, squared Depth- and testing whether the residual distribution meets the assumptions of constant variance and normality required for linear regression, the present analysis landed on using "squared beak depth" as the response variable in the model.
+
+The dataset was examined and transformations were made, after which residual diagnostics were used to test whether the different models met the assumptions of linear regression.
+
+#### Data Transformation
+
+```{r}
+# Adding transformed variables as columns in the dataset
+case0201$log_Depth <- log(case0201$Depth)
+
+case0201$sqrt_Depth <- sqrt(case0201$Depth)
+
+case0201$Depth_squared <- case0201$Depth^2
+```
+
+The residuals from log_Depth do not meet the assumption of normality in linear regression (p\<0.05), as demonstrated by the Shapiro-Wilk test. Model2 is inadequate for further analysis.
+
+```{r}
+# Linear model using log(Depth) 
+model2 <- lm(log_Depth ~ Year, data = case0201)
+summary(model2)
+
+# Testing normality of residuals
+residuals2 <- resid(model2)
+shapiro_test2 <- shapiro.test(residuals2)
+shapiro_test2
+```
+
+The residuals of sqrt_Depth do not meet the assumption of normality in linear regression (p\<0.05), as demonstrated by the Shapiro-Wilk test. Model3 is inadequate for further analysis.
+
+```{r}
+# Linear model using sqrt(Depth) 
+model3 <- lm(sqrt_Depth ~ Year, data = case0201)
+summary(model3)
+
+# Testing normality of residuals
+residuals3 <- resid(model3)
+shapiro_test3 <- shapiro.test(residuals3)
+shapiro_test3
+```
+
+The residuals of Depth do not meet the assumption of normality in linear regression (p\<0.05), as demonstrated by the Shapiro-Wilk test. Model4 is inadequate for further analysis.
+
+```{r}
+# Linear model using Depth
+model4 <- lm(Depth ~ Year, data = case0201)
+summary(model4)
+
+# Testing normality of residuals
+residuals4 <- resid(model4)
+shapiro_test4 <- shapiro.test(residuals4)
+shapiro_test4
+```
+
+#### Linear Model
+
+Owing to the normality and constant variance of the residuals, the following model was chosen for the present analysis.
+
+```{r}
+model <- lm(Depth_squared ~ Year, data = case0201)
+```
+
+## Results
+
+Table 1 summarizes the key properties of the dataset, including minimum and maximum values for beak depth in the population for before and after the flood, as well as the respective mean values. There is an increase in the mean beak depth of the population after the drought in 1977.
+
+```{r}
+# Summary table creation
+summary_table <- case0201 %>%
+  summarise(
+    `Minimum Beak Depth (mm)` = min(Depth),
+    `Maximum Beak Depth (mm)` = max(Depth),
+    `Mean Beak Depth (1976, mm)` = mean(Depth[Year == 1976]),
+    `Mean Beak Depth (1978, mm)` = mean(Depth[Year == 1978]),
+    `Mean Beak Depth Squared (1976, mm²)` = mean(Depth_squared[Year == 1976]),
+    `Mean Beak Depth Squared (1978, mm²)` = mean(Depth_squared[Year == 1978])
+  ) %>%
+  t() %>%  # Transposes the table so that metrics are rows
+  as.data.frame()
+
+# Converting the row names of the summary_table dataframe into a new column named "Metric"
+summary_table <- tibble::rownames_to_column(summary_table, "Metric")
+colnames(summary_table) <- c("Metric", "Value")
+
+# Creating the summary table
+summary_table %>%
+  kbl(caption = "Table 1: Key Features of Finch Beak Depth Data") %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), full_width = FALSE)
+
+```
+
+#### Descriptive Statistics
+
+Examining the distribution of beak depth in the population before and after the flood as well as the mean values for each year is possible using a histogram and box plot. Figures 1 and 2 highlight the upwards shift in beak depth in the population from 1976 to 1978.
+
+```{r}
+Fig1 <- case0201 |>
+    ggplot() +
+    geom_boxplot(aes(x = as.factor(Year), y = Depth)) + 
+    geom_jitter(aes(x = as.factor(Year), y = Depth), width = 0.2, alpha = 0.6, color = "turquoise") + # Add jittered points
+    labs(x = "Year", y = "Depth (mm)", title = "Beak Depth in 1976 and 1978") +
+    theme_bw()
+
+Fig1
+
+```
+
+```{r}
+Fig2 <-ggplot(case0201, aes(x = Depth)) +
+  geom_histogram(binwidth = 0.5, color = "black", fill = "gray", alpha = 0.7) +
+  facet_wrap(~ Year) +
+  labs(x = "Beak Depth", 
+       y = "Frequency", 
+       title = "Histogram of Beak Depth for 1976 and 1978") +
+  theme_bw()
+Fig2
+```
+
+#### Linear Regression
+
+The linear regression used squared beak depth as the response variable, which is shown to be the appropriate data transformation due to the normality of residuals. This is proven by the p-value of the Shapiro-Wilk test, which is greater than 0.05, suggesting the homoscedasticity of residuals in the model.
+
+```{r}
+# Testing normality of residuals
+residuals <- resid(model)
+shapiro_test <- shapiro.test(residuals)
+shapiro_test
+```
+
+Despite the Shapiro-Wilk test result, it is important to visually inspect the distribution of residuals by running residual diagnostics.
+
+```{r}
+# Setting up a 2x2 grid for the figure
+par(mfrow = c(2, 2))
+
+# Histogram of residuals
+hist(residuals(model), main = "Histogram of Residuals", xlab = "Residuals")
+
+# Q-Q plot with line
+qqnorm(residuals(model), main = "Q-Q Plot of Residuals")
+qqline(residuals(model), col = "red")
+
+# Residuals vs. fitted values
+plot(fitted(model), residuals(model),
+     main = "Residuals vs Fitted Values",
+     xlab = "Fitted Values",
+     ylab = "Residuals")
+abline(h = 0, col = "red", lty = 2)
+
+# Scale-Location plot
+plot(model, which = 3, main = "Scale-Location Plot")
+```
+
+The distribution of the residuals shown in the histogram is slightly left-skewed, suggesting a slight deviation from normality. Despite points on the Q-Q plot largely falling on the diagonal, there are deviations at the extremes. The straight line on the "Residuals vs Fitted Values" plot indicates the homoscedasticity of the residuals, and the same goes for the "Scale-Location Plot". Taken together, the residual diagnostics confirm the overall normality of residuals from the linear model used in the analysis, despite slight deviations for extreme values.
+
+#### Model Fit
+
+```{r}
+summary(model)
+```
+
+The linear regression returned a highly significant p-value at the 0.001 level, demonstrating the significant change in mean beak depth of the medium ground finch population. The slope indicates that squared beak depth increases by approximately 6.431 units for each additional year, and the p-value for this implies a strong linear relationship between year and squared beak depth. Thus, year can be said to be a statistically significant predictor of beak depth in this analysis. Additionally, the significance of the F-statistic confirms the significance of the linear model used in this analysis.
+
+However, the R-squared value of around 11% is relatively low. Only 11% of variability in squared beak depth is explained by year, suggesting the contribution of other factors which are not captured in the model. It is important to note that the present analysis uses year as a proxy for before and after the flood, but using environmental factors directly in the model may improve performance. Other factors that could have contributed to the observed trend, such as genetic variation and occurrence of hybridization with other species.
+
+## Conclusions
+
+This present analysis aimed to test whether there is evidence for the natural selection of beak depth in response to drought in a population of medium ground finches on the island Daphne Major. A linear regression was performed which included squared beak depth as the response variable, due to the distribution of its residuals meeting the assumptions of this statistical method. A highly statistically significant slope (\<0.001) demonstrates that there is a strong linear relationship between squared beak depth and year for this dataset, and the significance of the model overall is proven by the F-statistic. From these results, it can be said that year has a significant effect on the beak depth of this population.
+
+However, the R-squared value of only 11% suggests that year explains only a minor amount of variation seen in squared beak depth, and additional factors not included in this analysis likely play a role. It is important to consider that this analysis used year as a proxy for the drought which occurred on the island in 1977. Thus, including environmental factors such as rainfall or seed availability in the model directly rather than proxies such as year may improve the model performance. Another factor to consider is genetic variation. It is known that finches on the Galapagos islands can often hybridize, and the occurrence of such events may increase the genetic variation of a species, enabling it to respond more quickly to sudden environmental changes (Grant & Grant, 1996). Hybridization might be an important predictor of the propensity for beak depth to respond and change by providing the necessary alleles and genetic variation for natural selection to rapidly act upon, leading to character displacement. Although difficult to capture, including allelic diversity and the propensity to produce hybrids into the model could significantly improve its performance.
+
+Taken together, the results of this analysis suggest that while year is an important predictor of beak depth increase in this population, other factors not captured in the model likely also play a role. Omitting the use of proxies such as year and including environmental factors directly in the model, as well as accounting for the effects of genetic variation and the propensity to hybridize may significantly improve model performance and explain more of the variation in beak depth seen in this population.
+
+## References
+
+Grant, B.R. and Grant, P.R. (1989) ‘Natural selection in a population of Darwin’s finches’, *The American Naturalist*, 133(3), pp. 377–393. doi:10.1086/284924. 
+
+Grant, B.R. and Grant, P.R. (1996) ‘High survival of Darwin’s finch hybrids: Effects of beak morphology and diets’, *Ecology*, 77(2), pp. 500–509. doi:10.2307/2265625. 
+
+Grant, B.R. and Grant, P.R. (2003) ‘What Darwin’s finches can teach us about the evolutionary origin and regulation of Biodiversity’, *BioScience*, 53(10), p. 965. doi:10.1641/0006-3568(2003)053\[0965:wdfctu\]2.0.co;2. 
+
+Grant, P.R. and Grant, B.R. (2006) ‘Evolution of character displacement in Darwin’s finches’, *Science*, 313(5784), pp. 224–226. doi:10.1126/science.1128374. 
+
+Grant, P.R. *et al.* (1976) ‘Darwin’s finches: Population variation and natural selection.’, *Proceedings of the National Academy of Sciences*, 73(1), pp. 257–261. doi:10.1073/pnas.73.1.257. 

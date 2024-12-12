@@ -1,0 +1,6 @@
+"0",""
+"0","# Residuals vs. fitted values"
+"0","plot(fitted(model), residuals(model),"
+"0","     main = ""Residuals vs Fitted Values"","
+"0","     xlab = ""Fitted Values"","
+"0","     ylab = ""Residuals"")"
